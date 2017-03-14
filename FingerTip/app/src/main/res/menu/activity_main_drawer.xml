@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/home"
+            android:icon="@drawable/ic_genre"
+            android:title="Home" />
+        <item
+            android:id="@+id/fav_topic"
+            android:icon="@drawable/ic_favorites"
+            android:title="Favorite Topics" />
+        <item
+            android:id="@+id/trending_zone"
+            android:icon="@drawable/ic_recents"
+            android:title="Trending Zone" />
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Logout" />
+    </group>
+
+</menu>
