@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -92,7 +93,7 @@ public class TrendingZoneDescription extends AppCompatActivity implements
     private static final String MESSAGE_SENT_EVENT = "message_sent";
     private static final String MESSAGE_URL = "http://friendlychat.firebase.google.com/message/";
     private static final String LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif";
-
+    ImageView mBackImage;
     private String mUsername;
     private String mPhotoUrl;
     private SharedPreferences mSharedPreferences;
@@ -110,15 +111,26 @@ public class TrendingZoneDescription extends AppCompatActivity implements
     private ImageView mAddMessageImageView;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
     private GoogleApiClient mGoogleApiClient;
+    private String mTitle,mBackdrop_Image,mOverview,mRelease_Date,mAuthor,mUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.trending_zone_discussion);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("CHAT ROOM");
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            TOPIC = extras.getString("TRENDING_TOPIC");
+            TOPIC = extras.getString("trending_topic") + extras.getString("r_date");
+            mTitle = extras.getString("title");
+            mBackdrop_Image =extras.getString("b_img");
+            mOverview = extras.getString("overview");
+            mRelease_Date = extras.getString("r_date");
+            mAuthor=extras.getString("author");
+            mUrl = extras.getString("url");
         }
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -143,12 +155,13 @@ public class TrendingZoneDescription extends AppCompatActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
 
+        mBackImage = (ImageView) findViewById(R.id.imgBack);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mMessageRecyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(true);
 
-
+        Glide.with(getApplicationContext()).load(Uri.parse(mBackdrop_Image)).error(R.drawable.placeholder).into(mBackImage);
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         mFirebaseDatabaseReference.addValueEventListener(new ValueEventListener() {
@@ -156,9 +169,18 @@ public class TrendingZoneDescription extends AppCompatActivity implements
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 if( dataSnapshot.child(MESSAGES_CHILD).getValue() == null) {
-                    FriendlyMessage friendlyMessage = new FriendlyMessage("Topic Description Case", "TOPIC DESCRIPTION",
-                            "Default URL", null);
+                    FriendlyMessage friendlyMessage = new FriendlyMessage(mTitle+"("+mAuthor+")", mOverview,
+                            mUrl, null);
                     mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(TOPIC).push().setValue(friendlyMessage);
+                }
+                else
+                {
+                    if( dataSnapshot.child(MESSAGES_CHILD).child(TOPIC).getValue() == null)
+                    {
+                        FriendlyMessage friendlyMessage = new FriendlyMessage(mTitle+"("+mAuthor+")", mOverview,
+                                mUrl, null);
+                        mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(TOPIC).push().setValue(friendlyMessage);
+                    }
                 }
             }
 
@@ -509,4 +531,14 @@ public class TrendingZoneDescription extends AppCompatActivity implements
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

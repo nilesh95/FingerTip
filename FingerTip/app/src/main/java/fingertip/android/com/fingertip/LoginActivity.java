@@ -29,8 +29,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +61,12 @@ public class LoginActivity extends BaseActivity implements
         private GoogleApiClient mGoogleApiClient;
         private TextView mStatusTextView;
         private TextView mDetailTextView;
+
+    List<String> sourceList = new ArrayList<String>();
+    ValueEventListener valueEventListener;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
+    FirebaseUser user;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -88,24 +98,51 @@ public class LoginActivity extends BaseActivity implements
             mAuth = FirebaseAuth.getInstance();
             // [END initialize_auth]
 
+            Log.i("Value","First call");
+            database = FirebaseDatabase.getInstance();
+
+
             // [START auth_state_listener]
             mAuthListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    user = firebaseAuth.getCurrentUser();
                     if (user != null) {
                         // User is signed in
+                        showProgressDialog();
                         Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                        myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        Log.i("Value","Second call");
+                        // Read from the database
+                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                // This method is called once with the initial value and again
+                                // whenever data at this location is updated.
+                                GenericTypeIndicator<List<String>> value = new GenericTypeIndicator<List<String>>() {
+                                };
+                                sourceList = dataSnapshot.getValue(value);
+                                Log.i("Value","Third call");
+                                updateUI(user);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError error) {
+                                // Failed to read value
+                                Log.w(TAG, "Failed to read value.", error.toException());
+                                Log.i("Value","Fourth call");
+                            }
+                        });
+                        Log.i("Value","Fifth call");
                     } else {
                         // User is signed out
                         Log.d(TAG, "onAuthStateChanged:signed_out");
+                        updateUI(user);
                     }
-                    // [START_EXCLUDE]
-                    updateUI(user);
-                    // [END_EXCLUDE]
                 }
             };
             // [END auth_state_listener]
+
         }
 
         // [START on_start_add_listener]
@@ -217,9 +254,18 @@ public class LoginActivity extends BaseActivity implements
         private void updateUI(FirebaseUser user) {
             hideProgressDialog();
             if (user != null) {
-                Intent intent = new Intent(this,ListActivity.class);
-                startActivity(intent);
-                finish();
+                if(sourceList!=null)
+                {
+                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    intent.putStringArrayListExtra("ArrayList" , (ArrayList<String>) sourceList);
+                    startActivity(intent);
+                    finish();
+                }
+                else {
+                    Intent intent = new Intent(this, ListActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
 //                mStatusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
 //                mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
 //

@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,12 +20,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,19 +36,21 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,Tab_description.RefreshGrid {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "ReadFromDB";
-    SmartTabLayout viewPagerTab;
-    private ViewPager viewPager;
-    FragmentManager fm;
-    ViewPagerAdapter adapter;
     List<String> sourceList;
     ValueEventListener valueEventListener;
     FirebaseDatabase database;
     DatabaseReference myRef;
     List<String> selectedList;
+    Bundle extras;
+    public CircleImageView messengerImageView;
+    TextView mName,mEmail;
+    private static final int REQUEST_INVITE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Bundle extras = getIntent().getExtras();
+        extras = getIntent().getExtras();
         if (extras != null) {
             selectedList = extras.getStringArrayList("ArrayList");
         }
@@ -71,8 +72,11 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                        .setMessage(getString(R.string.invitation_message))
+                        .setCallToActionText(getString(R.string.invitation_cta))
+                        .build();
+                startActivityForResult(intent, REQUEST_INVITE);
             }
         });
 
@@ -86,18 +90,31 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         getSupportActionBar().setElevation(0);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.ic_menu_camera);
+
         navigationView.setCheckedItem(R.id.home);
         FragmentManager fragmentManager = getSupportFragmentManager();
         try {
-            fragmentManager.beginTransaction().replace(R.id.flContent,Home_Feed_Fragment.class.newInstance()).commit();
+            Fragment fragment = Home_Feed_Fragment.class.newInstance();
+            fragment.setArguments(extras);
+            fragmentManager.beginTransaction().replace(R.id.flContent,fragment).commit();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+        View navHeaderView = LayoutInflater.from(this).inflate(R.layout.nav_header_main, navigationView, false);
+        navigationView.addHeaderView(navHeaderView);
 
+        messengerImageView = (CircleImageView) navHeaderView.findViewById(R.id.imageView);
+        mName = (TextView) navHeaderView.findViewById(R.id.nameView);
+        mEmail = (TextView) navHeaderView.findViewById(R.id.textView);
+
+        Glide.with(this)
+                .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
+                .into(messengerImageView);
+
+        mEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        mName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
     }
 
     private void updateDB() {
@@ -105,68 +122,6 @@ public class MainActivity extends AppCompatActivity
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         myRef.setValue(selectedList);
-    }
-
-    private void setupViewPager(ViewPager viewPager) {
-        adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new Popular(), "POPULAR");
-        adapter.addFragment(new Top_rated(), "TOP RATED");
-        adapter.addFragment(new Favourite(), "FAVOURITE");
-
-        viewPager.setAdapter(adapter);
-    }
-
-    public void tabletView()
-    {
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.details_frag, new FragmentNone());
-        ft.commit();
-    }
-
-    @Override
-    public void refreshFavGrid() {
-        adapter.notifyDataSetChanged();
-    }
-    public interface UpdateableFragment {
-        public void update();
-    }
-
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
-
-        @Override
-        public int getItemPosition(Object object) {
-            if (object instanceof UpdateableFragment) {
-                ((UpdateableFragment) object).update();
-            }
-            //don't return POSITION_NONE, avoid fragment recreation.
-            return super.getItemPosition(object);
-        }
     }
 
     @Override
@@ -235,6 +190,7 @@ public class MainActivity extends AppCompatActivity
         }
         if(fragment!=null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
+            fragment.setArguments(extras);
             fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
             Log.i("Called","fourth");
         }

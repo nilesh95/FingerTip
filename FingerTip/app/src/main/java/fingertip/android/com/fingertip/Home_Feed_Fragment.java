@@ -27,12 +27,14 @@ public class Home_Feed_Fragment extends Fragment implements Tab_description.Refr
     ViewPagerAdapter adapter;
     SmartTabLayout viewPagerTab;
     private ViewPager viewPager;
+    Bundle bundle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.home_fragment_layout, container, false);
+        bundle = this.getArguments();
         fm=getActivity().getSupportFragmentManager();
         if(getResources().getBoolean(R.bool.dual_pane)){
             tabletView();
@@ -61,6 +63,7 @@ public class Home_Feed_Fragment extends Fragment implements Tab_description.Refr
 
         @Override
         public Fragment getItem(int position) {
+            mFragmentList.get(position).setArguments(bundle);
             return mFragmentList.get(position);
         }
 
@@ -81,9 +84,6 @@ public class Home_Feed_Fragment extends Fragment implements Tab_description.Refr
 
         @Override
         public int getItemPosition(Object object) {
-            if (object instanceof MainActivity.UpdateableFragment) {
-                ((MainActivity.UpdateableFragment) object).update();
-            }
             //don't return POSITION_NONE, avoid fragment recreation.
             return super.getItemPosition(object);
         }

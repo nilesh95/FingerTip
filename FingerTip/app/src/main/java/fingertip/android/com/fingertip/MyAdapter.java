@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private ArrayList<String> imagelist;
+    private ArrayList<String> titlelist;
 
     public static Context context;
 
@@ -24,12 +26,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
 
         public ImageView mImageView;
+        public TextView mTextView;
 
 
         public ViewHolder(View v) {
             super(v);
 
             mImageView= (ImageView) v.findViewById(R.id.imview);
+            mTextView = (TextView) v.findViewById(R.id.txtview);
             context = v.getContext();
 
         }
@@ -40,9 +44,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
 
-    public MyAdapter(ArrayList<String> myDataset){
+    public MyAdapter(ArrayList<String> myDataset,ArrayList<String> titleList){
         imagelist = myDataset;
-
+        titlelist = titleList;
 
 
     }
@@ -63,6 +67,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
 
 
+        holder.mTextView.setText(titlelist.get(position));
         Glide.with(context).load(imagelist.get(position)).error(R.drawable.placeholder).into(holder.mImageView);
 
 

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "984610427575-p3o7m45cg6olveopib8aopc1a90193sr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fingertip.android.com.fingertip",
+            "certificate_hash": "15c286c2a95566798186af9d6c785e48ef065dc2"
+          }
+        },
+        {
           "client_id": "984610427575-jhc8um63oul247s44scjg95uss9dcr7q.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
