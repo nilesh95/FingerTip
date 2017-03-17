@@ -1,6 +1,5 @@
-package fingertip.android.com.fingertip;
+package fingertip.android.com.fingertip.FavouriteFragment;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -10,15 +9,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -28,7 +24,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.twotoasters.jazzylistview.effects.HelixEffect;
 import com.twotoasters.jazzylistview.recyclerview.JazzyRecyclerViewScrollListener;
 
@@ -38,6 +33,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import fingertip.android.com.fingertip.Adapter.MyAdapter4;
+import fingertip.android.com.fingertip.HomeFragment.Tab_description;
+import fingertip.android.com.fingertip.ListActivity;
+import fingertip.android.com.fingertip.R;
+import fingertip.android.com.fingertip.RecyclerItemClickListner.RecyclerItemClickListener2;
 
 /**
  * Created by NILESH on 12-03-2017.

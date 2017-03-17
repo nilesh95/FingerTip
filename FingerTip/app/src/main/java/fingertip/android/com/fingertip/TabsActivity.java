@@ -14,6 +14,11 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import fingertip.android.com.fingertip.HomeFragment.Latest;
+import fingertip.android.com.fingertip.HomeFragment.Popular;
+import fingertip.android.com.fingertip.HomeFragment.Tab_description;
+import fingertip.android.com.fingertip.HomeFragment.Top_rated;
+
 
 public class TabsActivity extends AppCompatActivity implements Tab_description.RefreshGrid {
 
@@ -49,7 +54,7 @@ public class TabsActivity extends AppCompatActivity implements Tab_description.R
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new Popular(), "POPULAR");
         adapter.addFragment(new Top_rated(), "TOP RATED");
-        adapter.addFragment(new Favourite(), "FAVOURITE");
+        adapter.addFragment(new Latest(), "LATEST");
 
         viewPager.setAdapter(adapter);
     }

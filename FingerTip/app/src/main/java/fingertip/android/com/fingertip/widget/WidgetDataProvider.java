@@ -15,7 +15,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,7 +23,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import fingertip.android.com.fingertip.MyAdapter;
 import fingertip.android.com.fingertip.R;
 
 /**
@@ -70,7 +68,15 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
 
     @Override
     public int getCount() {
-            return min_count;
+        if(imgList.size()==0)
+        {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return imgList.size();
     }
 
     @Override
@@ -88,7 +94,7 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
         view.setImageViewUri(R.id.stock_symbol, Uri.parse(imgList.get(position)));
 
         final Intent fillInIntent = new Intent();
-
+        fillInIntent.putExtra("symbol", titleList.get(position));
         view.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
         return view;
     }
@@ -119,7 +125,7 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
             imgList.clear();
             titleList.clear();
         }
-
+Log.i("List  init","called");
         final long token = Binder.clearCallingIdentity();
 
         final String url = "https://newsapi.org/v1/articles?source=techcrunch&sortBy=top&apiKey=" + API_KEY;

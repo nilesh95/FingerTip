@@ -1,4 +1,4 @@
-package fingertip.android.com.fingertip;
+package fingertip.android.com.fingertip.HomeFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,8 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,8 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import fingertip.android.com.fingertip.*;
 
 /**
  * Created by NILESH on 12-03-2017.
@@ -99,7 +99,7 @@ public class Home_Feed_Fragment extends Fragment implements Tab_description.Refr
         adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new Popular(), "POPULAR");
         adapter.addFragment(new Top_rated(), "TOP RATED");
-        adapter.addFragment(new Favourite(), "FAVOURITE");
+        adapter.addFragment(new Latest(), "LATEST");
 
         viewPager.setAdapter(adapter);
     }

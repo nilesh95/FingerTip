@@ -1,4 +1,4 @@
-package fingertip.android.com.fingertip;
+package fingertip.android.com.fingertip.HomeFragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,11 +31,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import fingertip.android.com.fingertip.Adapter.MyAdapter;
+import fingertip.android.com.fingertip.R;
+import fingertip.android.com.fingertip.RecyclerItemClickListner.RecyclerItemClickListener2;
 
-public class Top_rated extends Fragment {
+
+public class Popular extends Fragment{
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter,smAdapter;
     private GridLayoutManager mLayoutManager;
@@ -71,7 +77,7 @@ public class Top_rated extends Fragment {
 //        }
 //    }
 
-    public Top_rated() {
+    public Popular() {
         // Required empty public constructor
     }
 
@@ -91,16 +97,13 @@ public class Top_rated extends Fragment {
         API_KEY=getActivity().getResources().getString(R.string.API_KEY);
         fm= getFragmentManager();
 
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            selectedList = bundle.getStringArrayList("ArrayList");
-        }
+        selectedList = Arrays.asList("the-next-web","the-times-of-india","bbc-news","business-insider","espn");
 
         if (getResources().getConfiguration().orientation == 2) {
             mLayoutManager = new GridLayoutManager(getActivity(), 3);
             mRecyclerView.setLayoutManager(mLayoutManager);
             for(String source : selectedList) {
-                final String url = "https://newsapi.org/v1/articles?source="+ source +"&sortBy=popular&apiKey=" + API_KEY;
+                final String url = "https://newsapi.org/v1/articles?source="+ source +"&sortBy=top&apiKey=" + API_KEY;
 
                 JsonObjectRequest jsonRequest = new JsonObjectRequest
                         (Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
@@ -157,13 +160,15 @@ public class Top_rated extends Fragment {
                             if (dual_pane) {
                                 Tab_description tabletDetailFragment=new Tab_description();
                                 Bundle b1=new Bundle();
-                                b1.putString("title", titlelist.get(position));
-                                b1.putString("b_img", imglist.get(position));
-                                b1.putString("overview", desclist.get(position));
-                                b1.putString("r_date", publishedTimelist.get(position));
-                                b1.putString("p_img", imglist.get(position));
-                                b1.putString("language", authorlist.get(position));
-                                b1.putString("url", urllist.get(position));
+
+
+                                    b1.putString("title", titlelist.get(position));
+                                    b1.putString("b_img", imglist.get(position));
+                                    b1.putString("overview", desclist.get(position));
+                                    b1.putString("r_date", publishedTimelist.get(position));
+                                    b1.putString("p_img", imglist.get(position));
+                                    b1.putString("language", authorlist.get(position));
+                                    b1.putString("url", urllist.get(position));
                                 tabletDetailFragment.setArguments(b1);
                                 FragmentTransaction ft = fm.beginTransaction();
                                 ft.replace(R.id.details_frag, tabletDetailFragment);
@@ -174,13 +179,13 @@ public class Top_rated extends Fragment {
                             }
 
                             else {
-                                Intent intent = new Intent(getActivity(), Movie_description.class);
-                                intent.putExtra("title", titlelist.get(position));
-                                intent.putExtra("b_img", imglist.get(position));
-                                intent.putExtra("overview", desclist.get(position));
-                                intent.putExtra("r_date", publishedTimelist.get(position));
-                                intent.putExtra("p_img", imglist.get(position));
-                                intent.putExtra("language", authorlist.get(position));
+                                Intent intent = new Intent(getActivity(), NewsDescription.class);
+                                    intent.putExtra("title", titlelist.get(position));
+                                    intent.putExtra("b_img", imglist.get(position));
+                                    intent.putExtra("overview", desclist.get(position));
+                                    intent.putExtra("r_date", publishedTimelist.get(position));
+                                    intent.putExtra("p_img", imglist.get(position));
+                                    intent.putExtra("language", authorlist.get(position));
                                 intent.putExtra("url", urllist.get(position));
                                 startActivity(intent);
                             }
@@ -267,14 +272,13 @@ public class Top_rated extends Fragment {
 
 
                             } else {
-                                Intent intent = new Intent(getActivity(), Movie_description.class);
+                                Intent intent = new Intent(getActivity(), NewsDescription.class);
                                 intent.putExtra("title", titlelist.get(position));
                                 intent.putExtra("b_img", imglist.get(position));
                                 intent.putExtra("overview", desclist.get(position));
                                 intent.putExtra("r_date", publishedTimelist.get(position));
                                 intent.putExtra("p_img", imglist.get(position));
                                 intent.putExtra("language", authorlist.get(position));
-
                                 intent.putExtra("url", urllist.get(position));
                                 startActivity(intent);
                             }
@@ -321,7 +325,7 @@ public class Top_rated extends Fragment {
             desclist.clear();
             publishedTimelist.clear();
             for(String source : selectedList) {
-                final String url = "https://newsapi.org/v1/articles?source="+ source +"&sortBy=popular&apiKey=" + API_KEY;
+                final String url = "https://newsapi.org/v1/articles?source="+ source +"&sortBy=top&apiKey=" + API_KEY;
 
                 JsonObjectRequest jsonRequest = new JsonObjectRequest
                         (Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
@@ -356,7 +360,6 @@ public class Top_rated extends Fragment {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 error.printStackTrace();
-
                                 //Toast.makeText(getActivity(), "Something went wrong!!please check your connection", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -396,6 +399,4 @@ public class Top_rated extends Fragment {
 
         }
     }
-
 }
-

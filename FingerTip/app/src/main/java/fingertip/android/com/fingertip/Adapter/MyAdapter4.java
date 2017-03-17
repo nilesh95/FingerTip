@@ -1,4 +1,4 @@
-package fingertip.android.com.fingertip;
+package fingertip.android.com.fingertip.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,8 +12,13 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
+import fingertip.android.com.fingertip.R;
 
-public class MyAdapter1 extends RecyclerView.Adapter<MyAdapter1.ViewHolder> {
+/**
+ * Created by NILESH on 13-03-2017.
+ */
+
+public class MyAdapter4 extends RecyclerView.Adapter<MyAdapter4.ViewHolder> {
     private ArrayList<String> imagelist;
 
     public static Context context;
@@ -41,7 +46,7 @@ public class MyAdapter1 extends RecyclerView.Adapter<MyAdapter1.ViewHolder> {
     }
 
 
-    public MyAdapter1(ArrayList<String> myDataset){
+    public MyAdapter4(ArrayList<String> myDataset){
         imagelist = myDataset;
 
 
@@ -49,19 +54,19 @@ public class MyAdapter1 extends RecyclerView.Adapter<MyAdapter1.ViewHolder> {
 
 
     @Override
-    public MyAdapter1.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public MyAdapter4.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                     int viewType) {
 
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.gridlayout, parent, false);
+                .inflate(R.layout.favourite_gridlayout, parent, false);
 
-        ViewHolder vh = new ViewHolder((View) v);
+        MyAdapter4.ViewHolder vh = new MyAdapter4.ViewHolder((View) v);
         return vh;
     }
 
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(MyAdapter4.ViewHolder holder, int position) {
 
 
         Glide.with(context).load(imagelist.get(position)).error(R.drawable.placeholder).into(holder.mImageView);

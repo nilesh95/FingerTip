@@ -1,6 +1,5 @@
-package fingertip.android.com.fingertip;
+package fingertip.android.com.fingertip.HomeFragment;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -10,15 +9,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -38,11 +34,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by NILESH on 12-03-2017.
- */
+import fingertip.android.com.fingertip.Adapter.MyAdapter;
+import fingertip.android.com.fingertip.R;
+import fingertip.android.com.fingertip.RecyclerItemClickListner.RecyclerItemClickListener2;
 
-public class Trending extends Fragment{
+
+public class Top_rated extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter,smAdapter;
     private GridLayoutManager mLayoutManager;
@@ -78,7 +75,7 @@ public class Trending extends Fragment{
 //        }
 //    }
 
-    public Trending() {
+    public Top_rated() {
         // Required empty public constructor
     }
 
@@ -107,7 +104,7 @@ public class Trending extends Fragment{
             mLayoutManager = new GridLayoutManager(getActivity(), 3);
             mRecyclerView.setLayoutManager(mLayoutManager);
             for(String source : selectedList) {
-                final String url = "https://newsapi.org/v1/articles?source="+ source +"&apiKey=" + API_KEY;
+                final String url = "https://newsapi.org/v1/articles?source="+ source +"&sortBy=popular&apiKey=" + API_KEY;
 
                 JsonObjectRequest jsonRequest = new JsonObjectRequest
                         (Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
@@ -127,7 +124,7 @@ public class Trending extends Fragment{
                                         publishedTimelist.add(jsonObject.getString("publishedAt"));
 
                                     }
-                                    mAdapter = new MyAdapter4(imglist);
+                                    mAdapter = new MyAdapter(imglist,titlelist);
                                     mRecyclerView.setAdapter(mAdapter);
 
                                 } catch (JSONException e) {
@@ -160,41 +157,38 @@ public class Trending extends Fragment{
                         @Override
                         public void onItemClick(View view, int position) {
 
-                                boolean dual_pane = getResources().getBoolean(R.bool.dual_pane);
-                                if (dual_pane) {
-                                    Tab_description tabletDetailFragment=new Tab_description();
-                                    Bundle b1=new Bundle();
-
-
-                                    b1.putString("title", titlelist.get(position));
-                                    b1.putString("trending_topic", titlelist.get(position));
-                                    b1.putString("overview", desclist.get(position));
-                                    b1.putString("r_date", publishedTimelist.get(position));
-                                    b1.putString("b_img", imglist.get(position));
-                                    b1.putString("url", urllist.get(position));
-                                    b1.putString("author", authorlist.get(position));
-                                    tabletDetailFragment.setArguments(b1);
-                                    FragmentTransaction ft = fm.beginTransaction();
-                                    ft.replace(R.id.details_frag, tabletDetailFragment);
-                                    ft.commit();
+                            boolean dual_pane = getResources().getBoolean(R.bool.dual_pane);
+                            if (dual_pane) {
+                                Tab_description tabletDetailFragment=new Tab_description();
+                                Bundle b1=new Bundle();
+                                b1.putString("title", titlelist.get(position));
+                                b1.putString("b_img", imglist.get(position));
+                                b1.putString("overview", desclist.get(position));
+                                b1.putString("r_date", publishedTimelist.get(position));
+                                b1.putString("p_img", imglist.get(position));
+                                b1.putString("language", authorlist.get(position));
+                                b1.putString("url", urllist.get(position));
+                                tabletDetailFragment.setArguments(b1);
+                                FragmentTransaction ft = fm.beginTransaction();
+                                ft.replace(R.id.details_frag, tabletDetailFragment);
+                                ft.commit();
 
 
 
-                                }
-
-                                else {
-                                    Intent intent = new Intent(getActivity(), TrendingZoneDescription.class);
-                                    intent.putExtra("title", titlelist.get(position));
-                                    intent.putExtra("trending_topic", titlelist.get(position));
-                                    intent.putExtra("overview", desclist.get(position));
-                                    intent.putExtra("r_date", publishedTimelist.get(position));
-                                    intent.putExtra("b_img", imglist.get(position));
-                                    intent.putExtra("p_img", imglist.get(position));
-                                    intent.putExtra("url", urllist.get(position));
-                                    intent.putExtra("author", authorlist.get(position));
-                                    startActivity(intent);
-                                }
                             }
+
+                            else {
+                                Intent intent = new Intent(getActivity(), NewsDescription.class);
+                                intent.putExtra("title", titlelist.get(position));
+                                intent.putExtra("b_img", imglist.get(position));
+                                intent.putExtra("overview", desclist.get(position));
+                                intent.putExtra("r_date", publishedTimelist.get(position));
+                                intent.putExtra("p_img", imglist.get(position));
+                                intent.putExtra("language", authorlist.get(position));
+                                intent.putExtra("url", urllist.get(position));
+                                startActivity(intent);
+                            }
+                        }
 
                     })
             );
@@ -203,50 +197,50 @@ public class Trending extends Fragment{
             mLayoutManager = new GridLayoutManager(getActivity(), 2);
             mRecyclerView.setLayoutManager(mLayoutManager);
             for(String source : selectedList) {
-            final String url = "https://newsapi.org/v1/articles?source="+ source +"&apiKey=" + API_KEY;
+                final String url = "https://newsapi.org/v1/articles?source="+ source +"&sortBy=top&apiKey=" + API_KEY;
 
-            JsonObjectRequest jsonRequest = new JsonObjectRequest
-                    (Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            // the response is already constructed as a JSONObject!
-                            try {
+                JsonObjectRequest jsonRequest = new JsonObjectRequest
+                        (Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                // the response is already constructed as a JSONObject!
+                                try {
 
-                                JSONArray json = response.getJSONArray("articles");
-                                for (int i = 0; i < json.length(); i++) {
-                                    JSONObject jsonObject = json.getJSONObject(i);
-                                    imglist.add(jsonObject.getString("urlToImage"));
-                                    authorlist.add(jsonObject.getString("author"));
-                                    titlelist.add(jsonObject.getString("title"));
-                                    desclist.add(jsonObject.getString("description"));
-                                    urllist.add(jsonObject.getString("url"));
-                                    publishedTimelist.add(jsonObject.getString("publishedAt"));
+                                    JSONArray json = response.getJSONArray("articles");
+                                    for (int i = 0; i < json.length(); i++) {
+                                        JSONObject jsonObject = json.getJSONObject(i);
+                                        imglist.add(jsonObject.getString("urlToImage"));
+                                        authorlist.add(jsonObject.getString("author"));
+                                        titlelist.add(jsonObject.getString("title"));
+                                        desclist.add(jsonObject.getString("description"));
+                                        urllist.add(jsonObject.getString("url"));
+                                        publishedTimelist.add(jsonObject.getString("publishedAt"));
 
+                                    }
+
+                                    mAdapter = new MyAdapter(imglist,titlelist);
+                                    mRecyclerView.setAdapter(mAdapter);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    isOnline();
+
+                                    //Toast.makeText(getActivity(), "Something went wrong!!please check your connection 111", Toast.LENGTH_SHORT).show();
                                 }
+                            }
+                        }, new Response.ErrorListener() {
 
-                                mAdapter = new MyAdapter4(imglist);
-                                mRecyclerView.setAdapter(mAdapter);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                error.printStackTrace();
                                 isOnline();
 
-                                //Toast.makeText(getActivity(), "Something went wrong!!please check your connection 111", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getActivity(), "Something went wrong!!please check your connection", Toast.LENGTH_SHORT).show();
                             }
-                        }
-                    }, new Response.ErrorListener() {
+                        });
 
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                            isOnline();
-
-                            //Toast.makeText(getActivity(), "Something went wrong!!please check your connection", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-            Volley.newRequestQueue(getActivity()).add(jsonRequest);
-        }
+                Volley.newRequestQueue(getActivity()).add(jsonRequest);
+            }
 
             jazzyScrollListener = new JazzyRecyclerViewScrollListener();
             mRecyclerView.addOnScrollListener(jazzyScrollListener);
@@ -258,36 +252,36 @@ public class Trending extends Fragment{
                         @Override
                         public void onItemClick(View view, int position) {
 
-                                boolean dual_pane = getResources().getBoolean(R.bool.dual_pane);
-                                if (dual_pane) {
-                                    Tab_description tabletDetailFragment = new Tab_description();
-                                    Bundle b1 = new Bundle();
+                            boolean dual_pane = getResources().getBoolean(R.bool.dual_pane);
+                            if (dual_pane) {
+                                Tab_description tabletDetailFragment = new Tab_description();
+                                Bundle b1 = new Bundle();
 
-                                    b1.putString("title", titlelist.get(position));
-                                    b1.putString("trending_topic", titlelist.get(position));
-                                    b1.putString("overview", desclist.get(position));
-                                    b1.putString("r_date", publishedTimelist.get(position));
-                                    b1.putString("b_img", imglist.get(position));
-                                    b1.putString("url", urllist.get(position));
-                                    b1.putString("author", authorlist.get(position));
-                                    tabletDetailFragment.setArguments(b1);
-                                    FragmentTransaction ft = fm.beginTransaction();
-                                    ft.replace(R.id.details_frag, tabletDetailFragment);
-                                    ft.commit();
+                                b1.putString("title", titlelist.get(position));
+                                b1.putString("b_img", imglist.get(position));
+                                b1.putString("overview", desclist.get(position));
+                                b1.putString("r_date", publishedTimelist.get(position));
+                                b1.putString("p_img", imglist.get(position));
+                                b1.putString("language", authorlist.get(position));
+                                b1.putString("url", urllist.get(position));
+                                tabletDetailFragment.setArguments(b1);
+                                FragmentTransaction ft = fm.beginTransaction();
+                                ft.replace(R.id.details_frag, tabletDetailFragment);
+                                ft.commit();
 
 
-                                } else {
-                                    Intent intent = new Intent(getActivity(), TrendingZoneDescription.class);
-                                    intent.putExtra("title", titlelist.get(position));
-                                    intent.putExtra("trending_topic", titlelist.get(position));
-                                    intent.putExtra("overview", desclist.get(position));
-                                    intent.putExtra("r_date", publishedTimelist.get(position));
-                                    intent.putExtra("b_img", imglist.get(position));
-                                    intent.putExtra("p_img", imglist.get(position));
-                                    intent.putExtra("url", urllist.get(position));
-                                    intent.putExtra("author", authorlist.get(position));
-                                    startActivity(intent);
-                                }
+                            } else {
+                                Intent intent = new Intent(getActivity(), NewsDescription.class);
+                                intent.putExtra("title", titlelist.get(position));
+                                intent.putExtra("b_img", imglist.get(position));
+                                intent.putExtra("overview", desclist.get(position));
+                                intent.putExtra("r_date", publishedTimelist.get(position));
+                                intent.putExtra("p_img", imglist.get(position));
+                                intent.putExtra("language", authorlist.get(position));
+
+                                intent.putExtra("url", urllist.get(position));
+                                startActivity(intent);
+                            }
                         }
                     })
             );
@@ -331,7 +325,7 @@ public class Trending extends Fragment{
             desclist.clear();
             publishedTimelist.clear();
             for(String source : selectedList) {
-                final String url = "https://newsapi.org/v1/articles?source="+ source +"&apiKey=" + API_KEY;
+                final String url = "https://newsapi.org/v1/articles?source="+ source +"&sortBy=popular&apiKey=" + API_KEY;
 
                 JsonObjectRequest jsonRequest = new JsonObjectRequest
                         (Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
@@ -352,7 +346,7 @@ public class Trending extends Fragment{
 
                                     }
 
-                                    mAdapter = new MyAdapter4(imglist);
+                                    mAdapter = new MyAdapter(imglist,titlelist);
                                     mRecyclerView.setAdapter(mAdapter);
 
                                 } catch (JSONException e) {
@@ -407,5 +401,5 @@ public class Trending extends Fragment{
         }
     }
 
-
 }
+

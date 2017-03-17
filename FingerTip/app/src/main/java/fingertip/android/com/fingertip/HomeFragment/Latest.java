@@ -1,11 +1,10 @@
-package fingertip.android.com.fingertip;
+package fingertip.android.com.fingertip.HomeFragment;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -36,12 +34,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-import io.realm.RealmResults;
+import fingertip.android.com.fingertip.Adapter.MyAdapter;
+import fingertip.android.com.fingertip.R;
+import fingertip.android.com.fingertip.RecyclerItemClickListner.RecyclerItemClickListener2;
 
 
-public class Favourite extends Fragment{
+public class Latest extends Fragment{
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter,smAdapter;
     private GridLayoutManager mLayoutManager;
@@ -77,7 +75,7 @@ public class Favourite extends Fragment{
 //        }
 //    }
 
-    public Favourite() {
+    public Latest() {
         // Required empty public constructor
     }
 
@@ -180,7 +178,7 @@ public class Favourite extends Fragment{
                             }
 
                             else {
-                                Intent intent = new Intent(getActivity(), Movie_description.class);
+                                Intent intent = new Intent(getActivity(), NewsDescription.class);
                                 intent.putExtra("title", titlelist.get(position));
                                 intent.putExtra("b_img", imglist.get(position));
                                 intent.putExtra("overview", desclist.get(position));
@@ -274,7 +272,7 @@ public class Favourite extends Fragment{
 
 
                             } else {
-                                Intent intent = new Intent(getActivity(), Movie_description.class);
+                                Intent intent = new Intent(getActivity(), NewsDescription.class);
                                 intent.putExtra("title", titlelist.get(position));
                                 intent.putExtra("b_img", imglist.get(position));
                                 intent.putExtra("overview", desclist.get(position));

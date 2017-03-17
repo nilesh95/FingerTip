@@ -1,4 +1,4 @@
-package fingertip.android.com.fingertip;
+package fingertip.android.com.fingertip.RecyclerItemClickListner;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
