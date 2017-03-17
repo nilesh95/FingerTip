@@ -23,11 +23,11 @@ import fingertip.android.com.fingertip.R;
  * Created by nilnayal on 3/15/2017.
  */
 
-public class Source_List_Description extends AppCompatActivity {
-    ImageView poster,title;
-    TextView year,average,synopsis,moTitle,tpopularity,tlanguage;
-    FloatingActionButton share,share_btn;
-    String mTitle,mBackdrop_Image,mOverview,mPoster_Image,mId,mgenre,mlanguage,mUrl,mCountry;
+public class SourceListDescription extends AppCompatActivity {
+    ImageView poster, title;
+    TextView year, average, synopsis, moTitle, tpopularity, tlanguage;
+    FloatingActionButton share;
+    String mTitle, mBackdrop_Image, mOverview, mPoster_Image, mId, mgenre, mlanguage, mUrl, mCountry;
     Context context;
     Button knowMore;
 
@@ -37,22 +37,22 @@ public class Source_List_Description extends AppCompatActivity {
     String API_KEY;
     String key;
     private LinearLayoutManager mLayoutManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_source);
         // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        context=this;
+        context = this;
         // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
-        API_KEY=getResources().getString(R.string.API_KEY);
-        poster= (ImageView) findViewById(R.id.poster);
-        year= (TextView) findViewById(R.id.year);
-        title= (ImageView) findViewById(R.id.imgBack);
-        synopsis= (TextView) findViewById(R.id.synopsis);
-        share= (FloatingActionButton) findViewById(R.id.fab);
-        share_btn= (FloatingActionButton) findViewById(R.id.fabshare);
-        tpopularity= (TextView) findViewById(R.id.popularity);
-        tlanguage= (TextView) findViewById(R.id.language);
+        API_KEY = getResources().getString(R.string.API_KEY);
+        poster = (ImageView) findViewById(R.id.poster);
+        year = (TextView) findViewById(R.id.year);
+        title = (ImageView) findViewById(R.id.imgBack);
+        synopsis = (TextView) findViewById(R.id.synopsis);
+        share = (FloatingActionButton) findViewById(R.id.fab);
+        tpopularity = (TextView) findViewById(R.id.popularity);
+        tlanguage = (TextView) findViewById(R.id.language);
         knowMore = (Button) findViewById(R.id.knowMore);
         mLayoutManager = new LinearLayoutManager(context) {
             @Override
@@ -60,7 +60,7 @@ public class Source_List_Description extends AppCompatActivity {
                 return false;
             }
         };
-        moTitle= (TextView) findViewById(R.id.motitle);
+        moTitle = (TextView) findViewById(R.id.motitle);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -71,14 +71,14 @@ public class Source_List_Description extends AppCompatActivity {
 
 
             mTitle = extras.getString("title");
-            mBackdrop_Image =extras.getString("b_img");
+            mBackdrop_Image = extras.getString("b_img");
             mOverview = extras.getString("overview");
             mPoster_Image = extras.getString("p_img");
             mId = extras.getString("id");
-            mgenre=extras.getString("genre");
-            mlanguage=extras.getString("language");
-            mUrl=extras.getString("url");
-            mCountry=extras.getString("country");
+            mgenre = extras.getString("genre");
+            mlanguage = extras.getString("language");
+            mUrl = extras.getString("url");
+            mCountry = extras.getString("country");
         }
         toolbar.setTitle(mTitle);
         Glide.with(getApplicationContext()).load(Uri.parse(mPoster_Image)).error(R.drawable.placeholder).into(poster);
@@ -103,9 +103,8 @@ public class Source_List_Description extends AppCompatActivity {
             public void onClick(View v) {
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                String shareBody = "Here is the trailer";
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, mTitle);
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,mTitle+ mUrl);
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, mTitle + mUrl);
                 startActivity(Intent.createChooser(sharingIntent, "Share via"));
 
             }

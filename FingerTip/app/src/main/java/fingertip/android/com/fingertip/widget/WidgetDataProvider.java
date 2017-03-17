@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Binder;
-import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -31,20 +30,18 @@ import fingertip.android.com.fingertip.R;
 
 public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory {
 
-    private static final String TAG = "WidgetDataProvider";
-
     Context mContext = null;
+    String API_KEY;
     private Cursor data = null;
     private List<String> imgList;
     private List<String> titleList;
-    String API_KEY;
     private int min_count = 4;
 
     public WidgetDataProvider(Context context, Intent intent) {
         mContext = context;
         API_KEY = context.getResources().getString(R.string.API_KEY);
-        imgList = new ArrayList<String>();
-        titleList = new ArrayList<String>();
+        imgList = new ArrayList<>();
+        titleList = new ArrayList<>();
     }
 
     @Override
@@ -60,7 +57,7 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
 
     @Override
     public void onDestroy() {
-        if (imgList != null && titleList !=null) {
+        if (imgList != null && titleList != null) {
             imgList.clear();
             titleList.clear();
         }
@@ -68,8 +65,7 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
 
     @Override
     public int getCount() {
-        if(imgList.size()==0)
-        {
+        if (imgList.size() == 0) {
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
@@ -82,7 +78,7 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
     @Override
     public RemoteViews getViewAt(int position) {
 
-        if (position == AdapterView.INVALID_POSITION ||titleList.size() == 0 || !(titleList.size()>position)) {
+        if (position == AdapterView.INVALID_POSITION || titleList.size() == 0 || !(titleList.size() > position)) {
             return null;
         }
 
@@ -121,11 +117,11 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
     }
 
     private void initData() {
-        if (imgList != null && titleList !=null) {
+        if (imgList != null && titleList != null) {
             imgList.clear();
             titleList.clear();
         }
-Log.i("List  init","called");
+
         final long token = Binder.clearCallingIdentity();
 
         final String url = "https://newsapi.org/v1/articles?source=techcrunch&sortBy=top&apiKey=" + API_KEY;
@@ -144,12 +140,11 @@ Log.i("List  init","called");
                                 titleList.add(jsonObject.getString("title"));
 
                             }
-                            Log.i("Widget","InitStep 3 "+imgList.size()+" "+titleList.size());
                             Binder.restoreCallingIdentity(token);
                         } catch (JSONException e) {
                             e.printStackTrace();
 
-                            //Toast.makeText(getActivity(), "Something went wrong!!please check your connection 111", Toast.LENGTH_SHORT).show();
+
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -157,7 +152,7 @@ Log.i("List  init","called");
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
-                        //Toast.makeText(getActivity(), "Something went wrong!!please check your connection", Toast.LENGTH_SHORT).show();
+
                     }
                 });
 

@@ -23,12 +23,12 @@ import io.realm.RealmConfiguration;
 
 
 public class NewsDescription extends AppCompatActivity {
-    ImageView poster,title;
-    TextView year,language,synopsis,moTitle;
+    ImageView poster, title;
+    TextView year, language, synopsis, moTitle;
     FloatingActionButton share;
     Button knowMore;
-    String mTitle,mBackdrop_Image,mOverview,mRelease_Date,mPoster_Image,mlanguage,mUrl;
-Context context;
+    String mTitle, mBackdrop_Image, mOverview, mRelease_Date, mPoster_Image, mlanguage, mUrl;
+    Context context;
 
 //    float rate;
 //    double d;
@@ -39,22 +39,23 @@ Context context;
     Realm realm;
     //RealmList<Movies_Fav> a=new RealmList<>();
     private LinearLayoutManager mLayoutManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
-       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        context=this;
+        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        context = this;
         // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
-        API_KEY=getResources().getString(R.string.API_KEY);
+        API_KEY = getResources().getString(R.string.API_KEY);
         realmConfig = new RealmConfiguration.Builder(context).deleteRealmIfMigrationNeeded().build();
         realm = Realm.getInstance(realmConfig);
-        poster= (ImageView) findViewById(R.id.poster);
-        year= (TextView) findViewById(R.id.year);
-        title= (ImageView) findViewById(R.id.imgBack);
+        poster = (ImageView) findViewById(R.id.poster);
+        year = (TextView) findViewById(R.id.year);
+        title = (ImageView) findViewById(R.id.imgBack);
         language = (TextView) findViewById(R.id.language_text);
-        synopsis= (TextView) findViewById(R.id.synopsis);
-        share= (FloatingActionButton) findViewById(R.id.fab);
+        synopsis = (TextView) findViewById(R.id.synopsis);
+        share = (FloatingActionButton) findViewById(R.id.fab);
         knowMore = (Button) findViewById(R.id.knowMore);
 //        r= (RatingBar) findViewById(R.id.rating);
         mLayoutManager = new LinearLayoutManager(context) {
@@ -63,7 +64,7 @@ Context context;
                 return false;
             }
         };
-        moTitle= (TextView) findViewById(R.id.motitle);
+        moTitle = (TextView) findViewById(R.id.motitle);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -73,12 +74,12 @@ Context context;
         if (extras != null) {
 
 
-           mTitle = extras.getString("title");
-           mBackdrop_Image =extras.getString("b_img");
-           mOverview = extras.getString("overview");
+            mTitle = extras.getString("title");
+            mBackdrop_Image = extras.getString("b_img");
+            mOverview = extras.getString("overview");
             mRelease_Date = extras.getString("r_date");
             mPoster_Image = extras.getString("p_img");
-            mlanguage=extras.getString("language");
+            mlanguage = extras.getString("language");
             mUrl = extras.getString("url");
         }
         toolbar.setTitle(mTitle);
@@ -94,8 +95,8 @@ Context context;
             public void onClick(View v) {
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, mTitle+ mUrl);
-                sharingIntent.putExtra(Intent.EXTRA_TEXT,mOverview);
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, mTitle + mUrl);
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, mOverview);
                 startActivity(Intent.createChooser(sharingIntent, "Share via"));
             }
         });

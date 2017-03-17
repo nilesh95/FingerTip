@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 
-import fingertip.android.com.fingertip.R;
-
 public class BaseActivity extends AppCompatActivity {
 
     @VisibleForTesting

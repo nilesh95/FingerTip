@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,23 +38,23 @@ import fingertip.android.com.fingertip.R;
 import fingertip.android.com.fingertip.RecyclerItemClickListner.RecyclerItemClickListener2;
 
 
-public class Latest extends Fragment{
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter,smAdapter;
-    private GridLayoutManager mLayoutManager;
-    ArrayList<String> imglist = new ArrayList<String>();
-    ArrayList<String> titlelist = new ArrayList<String>();
-    ArrayList<String> desclist = new ArrayList<String>();
-    ArrayList<String> urllist = new ArrayList<String>();
-    ArrayList<String> authorlist = new ArrayList<String>();
-    ArrayList<String> publishedTimelist = new ArrayList<String>();
+public class Latest extends Fragment {
+    ArrayList<String> imglist = new ArrayList<>();
+    ArrayList<String> titlelist = new ArrayList<>();
+    ArrayList<String> desclist = new ArrayList<>();
+    ArrayList<String> urllist = new ArrayList<>();
+    ArrayList<String> authorlist = new ArrayList<>();
+    ArrayList<String> publishedTimelist = new ArrayList<>();
     JazzyRecyclerViewScrollListener jazzyScrollListener;
     String API_KEY;
     SmartTabLayout viewPagerTab;
     List<String> selectedList;
-
     FragmentManager fm;
-
+    ConnectivityManager connectivityManager;
+    Context context;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter, smAdapter;
+    private GridLayoutManager mLayoutManager;
 //    private OnItemSelectedListener listener;
 
 
@@ -92,9 +91,11 @@ public class Latest extends Fragment{
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         setHasOptionsMenu(true);
         mRecyclerView.setHasFixedSize(true);
-        API_KEY=getActivity().getResources().getString(R.string.API_KEY);
-        fm= getFragmentManager();
+        API_KEY = getActivity().getResources().getString(R.string.API_KEY);
+        fm = getFragmentManager();
 
+        connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        context = getActivity();
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             selectedList = bundle.getStringArrayList("ArrayList");
@@ -103,8 +104,8 @@ public class Latest extends Fragment{
         if (getResources().getConfiguration().orientation == 2) {
             mLayoutManager = new GridLayoutManager(getActivity(), 3);
             mRecyclerView.setLayoutManager(mLayoutManager);
-            for(String source : selectedList) {
-                final String url = "https://newsapi.org/v1/articles?source="+ source +"&sortBy=latest&apiKey=" + API_KEY;
+            for (String source : selectedList) {
+                final String url = "https://newsapi.org/v1/articles?source=" + source + "&sortBy=latest&apiKey=" + API_KEY;
 
                 JsonObjectRequest jsonRequest = new JsonObjectRequest
                         (Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
@@ -124,14 +125,14 @@ public class Latest extends Fragment{
                                         publishedTimelist.add(jsonObject.getString("publishedAt"));
 
                                     }
-                                    mAdapter = new MyAdapter(imglist,titlelist);
+                                    mAdapter = new MyAdapter(imglist, titlelist);
                                     mRecyclerView.setAdapter(mAdapter);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     isOnline();
 
-                                    //Toast.makeText(getActivity(), "Something went wrong!!please check your connection 111", Toast.LENGTH_SHORT).show();
+
                                 }
                             }
                         }, new Response.ErrorListener() {
@@ -141,7 +142,7 @@ public class Latest extends Fragment{
                                 error.printStackTrace();
                                 isOnline();
 
-                                //Toast.makeText(getActivity(), "Something went wrong!!please check your connection", Toast.LENGTH_SHORT).show();
+
                             }
                         });
 
@@ -159,8 +160,8 @@ public class Latest extends Fragment{
 
                             boolean dual_pane = getResources().getBoolean(R.bool.dual_pane);
                             if (dual_pane) {
-                                Tab_description tabletDetailFragment=new Tab_description();
-                                Bundle b1=new Bundle();
+                                TabDescription tabletDetailFragment = new TabDescription();
+                                Bundle b1 = new Bundle();
                                 b1.putString("title", titlelist.get(position));
                                 b1.putString("b_img", imglist.get(position));
                                 b1.putString("overview", desclist.get(position));
@@ -174,10 +175,7 @@ public class Latest extends Fragment{
                                 ft.commit();
 
 
-
-                            }
-
-                            else {
+                            } else {
                                 Intent intent = new Intent(getActivity(), NewsDescription.class);
                                 intent.putExtra("title", titlelist.get(position));
                                 intent.putExtra("b_img", imglist.get(position));
@@ -196,8 +194,8 @@ public class Latest extends Fragment{
         } else if (getResources().getConfiguration().orientation == 1) {
             mLayoutManager = new GridLayoutManager(getActivity(), 2);
             mRecyclerView.setLayoutManager(mLayoutManager);
-            for(String source : selectedList) {
-                final String url = "https://newsapi.org/v1/articles?source="+ source +"&sortBy=latest&apiKey=" + API_KEY;
+            for (String source : selectedList) {
+                final String url = "https://newsapi.org/v1/articles?source=" + source + "&sortBy=latest&apiKey=" + API_KEY;
 
                 JsonObjectRequest jsonRequest = new JsonObjectRequest
                         (Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
@@ -218,14 +216,14 @@ public class Latest extends Fragment{
 
                                     }
 
-                                    mAdapter = new MyAdapter(imglist,titlelist);
+                                    mAdapter = new MyAdapter(imglist, titlelist);
                                     mRecyclerView.setAdapter(mAdapter);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     isOnline();
 
-                                    //Toast.makeText(getActivity(), "Something went wrong!!please check your connection 111", Toast.LENGTH_SHORT).show();
+
                                 }
                             }
                         }, new Response.ErrorListener() {
@@ -235,7 +233,7 @@ public class Latest extends Fragment{
                                 error.printStackTrace();
                                 isOnline();
 
-                                //Toast.makeText(getActivity(), "Something went wrong!!please check your connection", Toast.LENGTH_SHORT).show();
+
                             }
                         });
 
@@ -254,7 +252,7 @@ public class Latest extends Fragment{
 
                             boolean dual_pane = getResources().getBoolean(R.bool.dual_pane);
                             if (dual_pane) {
-                                Tab_description tabletDetailFragment = new Tab_description();
+                                TabDescription tabletDetailFragment = new TabDescription();
                                 Bundle b1 = new Bundle();
 
                                 b1.putString("title", titlelist.get(position));
@@ -289,23 +287,19 @@ public class Latest extends Fragment{
         }
 
 
-
         return view;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     public void isOnline() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        API_KEY=getActivity().getResources().getString(R.string.API_KEY);
-        if(activeNetwork==null){
-            Snackbar.make(mRecyclerView, "Please Connect to the Internet", Snackbar.LENGTH_LONG)
-                    .setAction("Retry", new View.OnClickListener() {
+        if (activeNetwork == null) {
+            Snackbar.make(mRecyclerView, getString(R.string.pleaseConnectInternet), Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.retry), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             isOnline();
@@ -313,19 +307,17 @@ public class Latest extends Fragment{
                     })
                     .setDuration(Snackbar.LENGTH_INDEFINITE)
                     .show();
-        }
-        else
-        {
+        } else {
 
-            Log.i("MainActivity", "s5");
+
             imglist.clear();
             titlelist.clear();
             authorlist.clear();
             urllist.clear();
             desclist.clear();
             publishedTimelist.clear();
-            for(String source : selectedList) {
-                final String url = "https://newsapi.org/v1/articles?source="+ source +"&sortBy=latest&apiKey=" + API_KEY;
+            for (String source : selectedList) {
+                final String url = "https://newsapi.org/v1/articles?source=" + source + "&sortBy=top&apiKey=" + API_KEY;
 
                 JsonObjectRequest jsonRequest = new JsonObjectRequest
                         (Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
@@ -346,13 +338,13 @@ public class Latest extends Fragment{
 
                                     }
 
-                                    mAdapter = new MyAdapter(imglist,titlelist);
+                                    mAdapter = new MyAdapter(imglist, titlelist);
                                     mRecyclerView.setAdapter(mAdapter);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
 
-                                    //Toast.makeText(getActivity(), "Something went wrong!!please check your connection 111", Toast.LENGTH_SHORT).show();
+
                                 }
                             }
                         }, new Response.ErrorListener() {
@@ -361,42 +353,14 @@ public class Latest extends Fragment{
                             public void onErrorResponse(VolleyError error) {
                                 error.printStackTrace();
 
-                                //Toast.makeText(getActivity(), "Something went wrong!!please check your connection", Toast.LENGTH_SHORT).show();
                             }
                         });
 
-                Volley.newRequestQueue(getActivity()).add(jsonRequest);
+                Volley.newRequestQueue(context).add(jsonRequest);
             }
 
         }
 
 
     }
-
-    public void onEmpty() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if (activeNetwork == null) {
-            Snackbar.make(mRecyclerView, "Please Connect to the Internet", Snackbar.LENGTH_LONG)
-                    .setAction("Retry", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            isOnline();
-                        }
-                    })
-                    .setDuration(Snackbar.LENGTH_INDEFINITE)
-                    .show();
-
-        } else {
-            Snackbar.make(mRecyclerView, "No matching word found", Snackbar.LENGTH_LONG)
-                    .setAction("Retry", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            isOnline();
-                        }
-                    })
-                    .setDuration(Snackbar.LENGTH_INDEFINITE)
-                    .show();
-
-        }
-    }}
+}

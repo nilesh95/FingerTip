@@ -15,28 +15,29 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import fingertip.android.com.fingertip.*;
+import fingertip.android.com.fingertip.FragmentNone;
+import fingertip.android.com.fingertip.R;
 
 /**
  * Created by NILESH on 12-03-2017.
  */
-public class Home_Feed_Fragment extends Fragment implements Tab_description.RefreshGrid  {
+public class HomeFeedFragment extends Fragment implements TabDescription.RefreshGrid {
 
-    private View view;
     FragmentManager fm;
     ViewPagerAdapter adapter;
     SmartTabLayout viewPagerTab;
-    private ViewPager viewPager;
     Bundle bundle;
+    private View view;
+    private ViewPager viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view=inflater.inflate(R.layout.home_fragment_layout, container, false);
+        view = inflater.inflate(R.layout.home_fragment_layout, container, false);
         bundle = this.getArguments();
-        fm=getActivity().getSupportFragmentManager();
-        if(getResources().getBoolean(R.bool.dual_pane)){
+        fm = getActivity().getSupportFragmentManager();
+        if (getResources().getBoolean(R.bool.dual_pane)) {
             tabletView();
         }
 
@@ -51,6 +52,21 @@ public class Home_Feed_Fragment extends Fragment implements Tab_description.Refr
     @Override
     public void refreshFavGrid() {
         adapter.notifyDataSetChanged();
+    }
+
+    public void tabletView() {
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.add(R.id.details_frag, new FragmentNone());
+        ft.commit();
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        adapter = new ViewPagerAdapter(getChildFragmentManager());
+        adapter.addFragment(new Popular(), "POPULAR");
+        adapter.addFragment(new TopRated(), "TOP RATED");
+        adapter.addFragment(new Latest(), "LATEST");
+
+        viewPager.setAdapter(adapter);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -87,21 +103,6 @@ public class Home_Feed_Fragment extends Fragment implements Tab_description.Refr
             //don't return POSITION_NONE, avoid fragment recreation.
             return super.getItemPosition(object);
         }
-    }
-
-    public void tabletView()
-    {
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.details_frag, new FragmentNone());
-        ft.commit();
-    }
-    private void setupViewPager(ViewPager viewPager) {
-        adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new Popular(), "POPULAR");
-        adapter.addFragment(new Top_rated(), "TOP RATED");
-        adapter.addFragment(new Latest(), "LATEST");
-
-        viewPager.setAdapter(adapter);
     }
 }
 

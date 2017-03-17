@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fingertip.android.com.fingertip.Adapter.MyAdapter4;
-import fingertip.android.com.fingertip.HomeFragment.Tab_description;
+import fingertip.android.com.fingertip.HomeFragment.TabDescription;
 import fingertip.android.com.fingertip.ListActivity;
 import fingertip.android.com.fingertip.R;
 import fingertip.android.com.fingertip.RecyclerItemClickListner.RecyclerItemClickListener2;
@@ -44,24 +43,25 @@ import fingertip.android.com.fingertip.RecyclerItemClickListner.RecyclerItemClic
  * Created by NILESH on 12-03-2017.
  */
 
-public class FavouriteZone extends Fragment{
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter,smAdapter;
-    private GridLayoutManager mLayoutManager;
-    ArrayList<String> imglist = new ArrayList<String>();
-    ArrayList<String> nameList = new ArrayList<String>();
-    ArrayList<String> descList = new ArrayList<String>();
-    ArrayList<String> categoryList = new ArrayList<String>();
-    ArrayList<String> languageList = new ArrayList<String>();
-    ArrayList<String> countryList = new ArrayList<String>();
-    ArrayList<String> idList = new ArrayList<String>();
-    ArrayList<String> urlList = new ArrayList<String>();
-
+public class FavouriteZone extends Fragment {
+    ArrayList<String> imglist = new ArrayList<>();
+    ArrayList<String> nameList = new ArrayList<>();
+    ArrayList<String> descList = new ArrayList<>();
+    ArrayList<String> categoryList = new ArrayList<>();
+    ArrayList<String> languageList = new ArrayList<>();
+    ArrayList<String> countryList = new ArrayList<>();
+    ArrayList<String> idList = new ArrayList<>();
+    ArrayList<String> urlList = new ArrayList<>();
     JazzyRecyclerViewScrollListener jazzyScrollListener;
     String API_KEY;
     FragmentManager fm;
-    private Button addMore;
     List<String> selectedList;
+    ConnectivityManager connectivityManager;
+    Context context;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter, smAdapter;
+    private GridLayoutManager mLayoutManager;
+    private Button addMore;
 
 //    private OnItemSelectedListener listener;
 
@@ -100,9 +100,11 @@ public class FavouriteZone extends Fragment{
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         setHasOptionsMenu(true);
         mRecyclerView.setHasFixedSize(true);
-        API_KEY=getActivity().getResources().getString(R.string.API_KEY);
-        fm= getFragmentManager();
+        API_KEY = getActivity().getResources().getString(R.string.API_KEY);
+        fm = getFragmentManager();
 
+        connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        context = getActivity();
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             selectedList = bundle.getStringArrayList("ArrayList");
@@ -122,8 +124,7 @@ public class FavouriteZone extends Fragment{
                                 JSONArray json = response.getJSONArray("sources");
                                 for (int i = 0; i < json.length(); i++) {
                                     JSONObject jsonObject = json.getJSONObject(i);
-                                    if(selectedList.contains(jsonObject.getString("id")))
-                                    {
+                                    if (selectedList.contains(jsonObject.getString("id"))) {
                                         imglist.add(jsonObject.getJSONObject("urlsToLogos").getString("large"));
                                         idList.add(jsonObject.getString("id"));
                                         urlList.add(jsonObject.getString("url"));
@@ -144,7 +145,7 @@ public class FavouriteZone extends Fragment{
                                 e.printStackTrace();
                                 isOnline();
 
-                                //Toast.makeText(getActivity(), "Something went wrong!!please check your connection 111", Toast.LENGTH_SHORT).show();
+
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -154,7 +155,7 @@ public class FavouriteZone extends Fragment{
                             error.printStackTrace();
                             isOnline();
 
-                            //Toast.makeText(getActivity(), "Something went wrong!!please check your connection", Toast.LENGTH_SHORT).show();
+
                         }
                     });
 
@@ -170,43 +171,40 @@ public class FavouriteZone extends Fragment{
                         @Override
                         public void onItemClick(View view, int position) {
 
-                                boolean dual_pane = getResources().getBoolean(R.bool.dual_pane);
-                                if (dual_pane) {
-                                    Tab_description tabletDetailFragment=new Tab_description();
-                                    Bundle b1=new Bundle();
+                            boolean dual_pane = getResources().getBoolean(R.bool.dual_pane);
+                            if (dual_pane) {
+                                TabDescription tabletDetailFragment = new TabDescription();
+                                Bundle b1 = new Bundle();
 
 
-                                    b1.putString("title", nameList.get(position));
-                                    b1.putString("b_img", imglist.get(position));
-                                    b1.putString("overview", descList.get(position));
-                                    b1.putString("id", idList.get(position));
-                                    b1.putString("genre", categoryList.get(position));
-                                    b1.putString("language", languageList.get(position));
-                                    b1.putString("country", countryList.get(position));
-                                    b1.putString("url", urlList.get(position));
-                                    b1.putString("p_img", imglist.get(position));
-                                    tabletDetailFragment.setArguments(b1);
-                                    FragmentTransaction ft = fm.beginTransaction();
-                                    ft.replace(R.id.details_frag, tabletDetailFragment);
-                                    ft.commit();
+                                b1.putString("title", nameList.get(position));
+                                b1.putString("b_img", imglist.get(position));
+                                b1.putString("overview", descList.get(position));
+                                b1.putString("id", idList.get(position));
+                                b1.putString("genre", categoryList.get(position));
+                                b1.putString("language", languageList.get(position));
+                                b1.putString("country", countryList.get(position));
+                                b1.putString("url", urlList.get(position));
+                                b1.putString("p_img", imglist.get(position));
+                                tabletDetailFragment.setArguments(b1);
+                                FragmentTransaction ft = fm.beginTransaction();
+                                ft.replace(R.id.details_frag, tabletDetailFragment);
+                                ft.commit();
 
 
-
-                                }
-
-                                else {
-                                    Intent intent = new Intent(getActivity(), Source_List_Description.class);
-                                    intent.putExtra("title", nameList.get(position));
-                                    intent.putExtra("b_img", imglist.get(position));
-                                    intent.putExtra("overview", descList.get(position));
-                                    intent.putExtra("id", idList.get(position));
-                                    intent.putExtra("genre", categoryList.get(position));
-                                    intent.putExtra("language", languageList.get(position));
-                                    intent.putExtra("country", countryList.get(position));
-                                    intent.putExtra("url", urlList.get(position));
-                                    intent.putExtra("p_img", imglist.get(position));
-                                    startActivity(intent);
-                                }
+                            } else {
+                                Intent intent = new Intent(getActivity(), SourceListDescription.class);
+                                intent.putExtra("title", nameList.get(position));
+                                intent.putExtra("b_img", imglist.get(position));
+                                intent.putExtra("overview", descList.get(position));
+                                intent.putExtra("id", idList.get(position));
+                                intent.putExtra("genre", categoryList.get(position));
+                                intent.putExtra("language", languageList.get(position));
+                                intent.putExtra("country", countryList.get(position));
+                                intent.putExtra("url", urlList.get(position));
+                                intent.putExtra("p_img", imglist.get(position));
+                                startActivity(intent);
+                            }
                         }
                     })
             );
@@ -225,8 +223,7 @@ public class FavouriteZone extends Fragment{
                                 JSONArray json = response.getJSONArray("results");
                                 for (int i = 0; i < json.length(); i++) {
                                     JSONObject jsonObject = json.getJSONObject(i);
-                                    if(selectedList.contains(jsonObject.getString("id")))
-                                    {
+                                    if (selectedList.contains(jsonObject.getString("id"))) {
                                         imglist.add(jsonObject.getJSONObject("urlsToLogos").getString("large"));
                                         idList.add(jsonObject.getString("id"));
                                         urlList.add(jsonObject.getString("url"));
@@ -247,7 +244,7 @@ public class FavouriteZone extends Fragment{
                                 e.printStackTrace();
                                 isOnline();
 
-                                //Toast.makeText(getActivity(), "Something went wrong!!please check your connection 111", Toast.LENGTH_SHORT).show();
+
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -258,7 +255,6 @@ public class FavouriteZone extends Fragment{
                             isOnline();
 
 
-                            //Toast.makeText(getActivity(), "Something went wrong!!please check your connection", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -277,8 +273,8 @@ public class FavouriteZone extends Fragment{
 
                             boolean dual_pane = getResources().getBoolean(R.bool.dual_pane);
                             if (dual_pane) {
-                                Tab_description tabletDetailFragment=new Tab_description();
-                                Bundle b1=new Bundle();
+                                TabDescription tabletDetailFragment = new TabDescription();
+                                Bundle b1 = new Bundle();
 
                                 b1.putString("title", nameList.get(position));
                                 b1.putString("b_img", imglist.get(position));
@@ -296,11 +292,8 @@ public class FavouriteZone extends Fragment{
                                 ft.commit();
 
 
-
-                            }
-
-                            else {
-                                Intent intent = new Intent(getActivity(), Source_List_Description.class);
+                            } else {
+                                Intent intent = new Intent(getActivity(), SourceListDescription.class);
                                 intent.putExtra("title", nameList.get(position));
                                 intent.putExtra("b_img", imglist.get(position));
 
@@ -322,7 +315,7 @@ public class FavouriteZone extends Fragment{
         addMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),ListActivity.class);
+                Intent intent = new Intent(getActivity(), ListActivity.class);
                 startActivity(intent);
             }
         });
@@ -333,17 +326,14 @@ public class FavouriteZone extends Fragment{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     public void isOnline() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        API_KEY=getActivity().getResources().getString(R.string.API_KEY);
-        if(activeNetwork==null){
-            Snackbar.make(mRecyclerView, "Please Connect to the Internet", Snackbar.LENGTH_LONG)
-                    .setAction("Retry", new View.OnClickListener() {
+        if (activeNetwork == null) {
+            Snackbar.make(mRecyclerView, getString(R.string.pleaseConnectInternet), Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.retry), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             isOnline();
@@ -351,11 +341,9 @@ public class FavouriteZone extends Fragment{
                     })
                     .setDuration(Snackbar.LENGTH_INDEFINITE)
                     .show();
-        }
-        else
-        {
+        } else {
 
-            Log.i("MainActivity", "s5");
+
             imglist.clear();
             nameList.clear();
             descList.clear();
@@ -375,8 +363,7 @@ public class FavouriteZone extends Fragment{
                                 JSONArray json = response.getJSONArray("sources");
                                 for (int i = 0; i < json.length(); i++) {
                                     JSONObject jsonObject = json.getJSONObject(i);
-                                    if(selectedList.contains(jsonObject.getString("id")))
-                                    {
+                                    if (selectedList.contains(jsonObject.getString("id"))) {
                                         imglist.add(jsonObject.getJSONObject("urlsToLogos").getString("large"));
                                         idList.add(jsonObject.getString("id"));
                                         urlList.add(jsonObject.getString("url"));
@@ -396,7 +383,6 @@ public class FavouriteZone extends Fragment{
                                 e.printStackTrace();
                                 isOnline();
 
-                                //Toast.makeText(getActivity(), "Something went wrong!!please check your connection 111", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -405,47 +391,15 @@ public class FavouriteZone extends Fragment{
                         public void onErrorResponse(VolleyError error) {
                             error.printStackTrace();
 
-                            //Toast.makeText(getActivity(), "Something went wrong!!please check your connection", Toast.LENGTH_SHORT).show();
                         }
                     });
 
-            Volley.newRequestQueue(getActivity()).add(jsonRequest);
+            Volley.newRequestQueue(context).add(jsonRequest);
 
         }
 
 
     }
-
-
-
-    public void onEmpty() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if (activeNetwork == null) {
-            Snackbar.make(mRecyclerView, "Please Connect to the Internet", Snackbar.LENGTH_LONG)
-                    .setAction("Retry", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            isOnline();
-                        }
-                    })
-                    .setDuration(Snackbar.LENGTH_INDEFINITE)
-                    .show();
-
-        } else {
-            Snackbar.make(mRecyclerView, "No matching word found", Snackbar.LENGTH_LONG)
-                    .setAction("Retry", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            isOnline();
-                        }
-                    })
-                    .setDuration(Snackbar.LENGTH_INDEFINITE)
-                    .show();
-
-        }
-    }
-
 
 }
 

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,7 +14,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -29,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,18 +35,17 @@ import java.util.List;
 
 public class ListActivity extends AppCompatActivity {
 
+    // Initializing a new list
+    final List<String> trees = new ArrayList<>();
+    ArrayAdapter<String> adapter;
     private Context mContext;
     private Activity mActivity;
-
     private RelativeLayout mRelativeLayout;
     private ListView mListView;
     private Button mButton;
     private ArrayList<String> selectedString;
     private int selectedCount;
     private ProgressBar mProgressBar;
-    // Initializing a new list
-    final List<String> trees = new ArrayList<String>();
-    ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +54,9 @@ public class ListActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("SOURCE SELECTOR");
+        getSupportActionBar().setTitle(getString(R.string.sourceSelector));
 
-        selectedString = new ArrayList<String>();
+        selectedString = new ArrayList<>();
         // Get the application context
         mContext = getApplicationContext();
 
@@ -77,7 +73,7 @@ public class ListActivity extends AppCompatActivity {
         fetchSourceList();
 
         // Initialize a new ArrayAdapter
-        adapter = new ArrayAdapter(mActivity,android.R.layout.simple_list_item_multiple_choice,trees);
+        adapter = new ArrayAdapter(mActivity, android.R.layout.simple_list_item_multiple_choice, trees);
 
         // Set the adapter for ListView
         mListView.setAdapter(adapter);
@@ -91,21 +87,17 @@ public class ListActivity extends AppCompatActivity {
                 SparseBooleanArray clickedItemPositions = mListView.getCheckedItemPositions();
 
                 selectedCount = 0;
-                for(int index=0;index<clickedItemPositions.size();index++){
+                for (int index = 0; index < clickedItemPositions.size(); index++) {
                     // Get the checked status of the current item
                     boolean checked = clickedItemPositions.valueAt(index);
-                    if(checked){
+                    if (checked) {
                         // If the current item is checked
-                        int key = clickedItemPositions.keyAt(index);
                         mButton.setEnabled(true);
-                    }
-                    else
-                    {
+                    } else {
                         selectedCount++;
                     }
                 }
-                if(selectedCount==clickedItemPositions.size())
-                {
+                if (selectedCount == clickedItemPositions.size()) {
                     mButton.setEnabled(false);
                 }
             }
@@ -117,21 +109,20 @@ public class ListActivity extends AppCompatActivity {
                 SparseBooleanArray clickedItemPositions = mListView.getCheckedItemPositions();
 
 
-                for(int index=0;index<clickedItemPositions.size();index++){
+                for (int index = 0; index < clickedItemPositions.size(); index++) {
                     // Get the checked status of the current item
                     boolean checked = clickedItemPositions.valueAt(index);
 
-                    Log.i("Info","Value called In Loop");
-                    if(checked){
+
+                    if (checked) {
                         // If the current item is checked
                         int key = clickedItemPositions.keyAt(index);
-                        Log.i("Info","Value called");
                         selectedString.add(trees.get(key));
 
                     }
                 }
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                intent.putStringArrayListExtra("ArrayList" , selectedString);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putStringArrayListExtra("ArrayList", selectedString);
                 startActivity(intent);
                 finish();
             }
@@ -155,9 +146,9 @@ public class ListActivity extends AppCompatActivity {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(getApplicationContext(), "Something went wrong!!please check your connection 111", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.errorMessage), Toast.LENGTH_SHORT).show();
                         }
-                        adapter = new ArrayAdapter(mActivity,android.R.layout.simple_list_item_multiple_choice,trees);
+                        adapter = new ArrayAdapter(mActivity, android.R.layout.simple_list_item_multiple_choice, trees);
 
                         // Set the adapter for ListView
                         mListView.setAdapter(adapter);
@@ -168,7 +159,7 @@ public class ListActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Something went wrong!!please check your connection", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.errorMessage), Toast.LENGTH_SHORT).show();
                     }
                 });
 

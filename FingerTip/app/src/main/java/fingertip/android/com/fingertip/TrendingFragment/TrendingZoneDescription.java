@@ -69,36 +69,20 @@ import fingertip.android.com.fingertip.R;
 public class TrendingZoneDescription extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener {
 
-    public static class MessageViewHolder extends RecyclerView.ViewHolder {
-        public TextView messageTextView;
-        public ImageView messageImageView;
-        public TextView messengerTextView;
-        public CircleImageView messengerImageView;
-
-        public MessageViewHolder(View v) {
-            super(v);
-            messageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
-            messageImageView = (ImageView) itemView.findViewById(R.id.messageImageView);
-            messengerTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
-            messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
-        }
-    }
-
-    private static final String TAG = "MainActivity";
     public static final String MESSAGES_CHILD = "trendingZone";
-    public static String TOPIC = "GENERAL";
-    private static final int REQUEST_INVITE = 1;
-    private static final int REQUEST_IMAGE = 2;
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 10;
     public static final String ANONYMOUS = "anonymous";
+    private static final int REQUEST_INVITE = 1;
+    private static final int REQUEST_IMAGE = 2;
     private static final String MESSAGE_SENT_EVENT = "message_sent";
     private static final String MESSAGE_URL = "http://friendlychat.firebase.google.com/message/";
     private static final String LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif";
+    public static String TOPIC = "GENERAL";
+    private static String TAG;
     ImageView mBackImage;
     private String mUsername;
     private String mPhotoUrl;
     private SharedPreferences mSharedPreferences;
-
     private Button mSendButton;
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -112,25 +96,27 @@ public class TrendingZoneDescription extends AppCompatActivity implements
     private ImageView mAddMessageImageView;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
     private GoogleApiClient mGoogleApiClient;
-    private String mTitle,mBackdrop_Image,mOverview,mRelease_Date,mAuthor,mUrl;
+    private String mTitle, mBackdrop_Image, mOverview, mRelease_Date, mAuthor, mUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.trending_zone_discussion);
+
+        TAG = getString(R.string.mainActivity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("CHAT ROOM");
+        getSupportActionBar().setTitle(getString(R.string.chatRoom));
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             TOPIC = extras.getString("trending_topic") + extras.getString("r_date");
             mTitle = extras.getString("title");
-            mBackdrop_Image =extras.getString("b_img");
+            mBackdrop_Image = extras.getString("b_img");
             mOverview = extras.getString("overview");
             mRelease_Date = extras.getString("r_date");
-            mAuthor=extras.getString("author");
+            mAuthor = extras.getString("author");
             mUrl = extras.getString("url");
         }
 
@@ -169,16 +155,13 @@ public class TrendingZoneDescription extends AppCompatActivity implements
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if( dataSnapshot.child(MESSAGES_CHILD).getValue() == null) {
-                    FingerTipMessage fingerTipMessage = new FingerTipMessage(mTitle+"("+mAuthor+")", mOverview,
+                if (dataSnapshot.child(MESSAGES_CHILD).getValue() == null) {
+                    FingerTipMessage fingerTipMessage = new FingerTipMessage(mTitle + "(" + mAuthor + ")", mOverview,
                             mUrl, null);
                     mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(TOPIC).push().setValue(fingerTipMessage);
-                }
-                else
-                {
-                    if( dataSnapshot.child(MESSAGES_CHILD).child(TOPIC).getValue() == null)
-                    {
-                        FingerTipMessage fingerTipMessage = new FingerTipMessage(mTitle+"("+mAuthor+")", mOverview,
+                } else {
+                    if (dataSnapshot.child(MESSAGES_CHILD).child(TOPIC).getValue() == null) {
+                        FingerTipMessage fingerTipMessage = new FingerTipMessage(mTitle + "(" + mAuthor + ")", mOverview,
                                 mUrl, null);
                         mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(TOPIC).push().setValue(fingerTipMessage);
                     }
@@ -191,7 +174,7 @@ public class TrendingZoneDescription extends AppCompatActivity implements
             }
         });
 
-        Log.i("Position Visited" , "first");
+
         mFirebaseAdapter = new FirebaseRecyclerAdapter<FingerTipMessage, MessageViewHolder>(
                 FingerTipMessage.class,
                 R.layout.item_message,
@@ -201,12 +184,12 @@ public class TrendingZoneDescription extends AppCompatActivity implements
             @Override
             protected FingerTipMessage parseSnapshot(DataSnapshot snapshot) {
                 FingerTipMessage fingerTipMessage = super.parseSnapshot(snapshot);
-                Log.i("Position Visited" , "second");
+
                 if (fingerTipMessage != null) {
                     fingerTipMessage.setId(snapshot.getKey());
                 }
 
-                Log.i("Position Visited" , "third");
+
                 return fingerTipMessage;
             }
 
@@ -233,7 +216,7 @@ public class TrendingZoneDescription extends AppCompatActivity implements
                                                     .load(downloadUrl)
                                                     .into(viewHolder.messageImageView);
                                         } else {
-                                            Log.w(TAG, "Getting download url was not successful.",
+                                            Log.w(TAG, getString(R.string.getting_url),
                                                     task.getException());
                                         }
                                     }
@@ -268,8 +251,6 @@ public class TrendingZoneDescription extends AppCompatActivity implements
             }
         };
 
-
-        Log.i("Position Visited" , "last");
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -369,7 +350,7 @@ public class TrendingZoneDescription extends AppCompatActivity implements
 
     private Indexable getMessageIndexable(FingerTipMessage fingerTipMessage) {
         PersonBuilder sender = Indexables.personBuilder()
-                .setIsSelf(mUsername == fingerTipMessage.getName())
+                .setIsSelf(mUsername.equals(fingerTipMessage.getName()))
                 .setName(fingerTipMessage.getName())
                 .setUrl(MESSAGE_URL.concat(fingerTipMessage.getId() + "/sender"));
 
@@ -435,7 +416,7 @@ public class TrendingZoneDescription extends AppCompatActivity implements
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         // There has been an error fetching the config
-                        Log.w(TAG, "Error fetching config", e);
+                        Log.w(TAG, getString(R.string.error_fetching), e);
                         applyRetrievedLengthLimit();
                     }
                 });
@@ -444,13 +425,13 @@ public class TrendingZoneDescription extends AppCompatActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+        Log.d(TAG, getString(R.string.onActivityResult) + requestCode + getString(R.string.resultCode) + resultCode);
 
         if (requestCode == REQUEST_IMAGE) {
             if (resultCode == RESULT_OK) {
                 if (data != null) {
                     final Uri uri = data.getData();
-                    Log.d(TAG, "Uri: " + uri.toString());
+                    Log.d(TAG, getString(R.string.uri) + uri.toString());
 
                     FingerTipMessage tempMessage = new FingerTipMessage(null, mUsername, mPhotoUrl,
                             LOADING_IMAGE_URL);
@@ -469,7 +450,7 @@ public class TrendingZoneDescription extends AppCompatActivity implements
 
                                         putImageInStorage(storageReference, uri, key);
                                     } else {
-                                        Log.w(TAG, "Unable to write message to database.",
+                                        Log.w(TAG, getString(R.string.unableWriteMessage),
                                                 databaseError.toException());
                                     }
                                 }
@@ -484,7 +465,7 @@ public class TrendingZoneDescription extends AppCompatActivity implements
 
                 // Check how many invitations were sent and log.
                 String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
-                Log.d(TAG, "Invitations sent: " + ids.length);
+                Log.d(TAG, getString(R.string.invitationSent) + ids.length);
             } else {
                 // Use Firebase Measurement to log that invitation was not sent
                 Bundle payload = new Bundle();
@@ -492,7 +473,7 @@ public class TrendingZoneDescription extends AppCompatActivity implements
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
 
                 // Sending failed or it was canceled, show failure message to the user
-                Log.d(TAG, "Failed to send invitation.");
+                Log.d(TAG, getString(R.string.failedToInvitation));
             }
         }
     }
@@ -510,7 +491,7 @@ public class TrendingZoneDescription extends AppCompatActivity implements
                             mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(TOPIC).child(key)
                                     .setValue(fingerTipMessage);
                         } else {
-                            Log.w(TAG, "Image upload task was not successful.",
+                            Log.w(TAG, getString(R.string.image_upload),
                                     task.getException());
                         }
                     }
@@ -524,12 +505,12 @@ public class TrendingZoneDescription extends AppCompatActivity implements
     private void applyRetrievedLengthLimit() {
         Long friendly_msg_length = mFirebaseRemoteConfig.getLong("friendly_msg_length");
         mMessageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(friendly_msg_length.intValue())});
-        Log.d(TAG, "FML is: " + friendly_msg_length);
+        Log.d(TAG, getString(R.string.fml) + friendly_msg_length);
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        Log.d(TAG, getString(R.string.fml) + connectionResult);
     }
 
     @Override
@@ -540,6 +521,21 @@ public class TrendingZoneDescription extends AppCompatActivity implements
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public static class MessageViewHolder extends RecyclerView.ViewHolder {
+        public TextView messageTextView;
+        public ImageView messageImageView;
+        public TextView messengerTextView;
+        public CircleImageView messengerImageView;
+
+        public MessageViewHolder(View v) {
+            super(v);
+            messageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
+            messageImageView = (ImageView) itemView.findViewById(R.id.messageImageView);
+            messengerTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
+            messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
         }
     }
 }

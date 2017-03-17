@@ -21,8 +21,31 @@ import fingertip.android.com.fingertip.R;
 
 public class QuoteWidgetProvider extends AppWidgetProvider {
 
-    public static final String SYNC_CLICKED= "com.sam_chordas.android.stockhawk.SYNC_CLICKED";
-    private static final String TAG = "Widget: ";
+    public static final String SYNC_CLICKED = "com.sam_chordas.android.stockhawk.SYNC_CLICKED";
+
+    /**
+     * Sets the remote adapter used to fill in the list items
+     *
+     * @param views RemoteViews to set the RemoteAdapter
+     */
+
+
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private static void setRemoteAdapter(Context context, @NonNull final RemoteViews views) {
+        views.setRemoteAdapter(R.id.widget_list,
+                new Intent(context, QuoteWidgetRemoteViewsService.class));
+    }
+
+    /**
+     * Sets the remote adapter used to fill in the list items
+     *
+     * @param views RemoteViews to set the RemoteAdapter
+     */
+    @SuppressWarnings("deprecation")
+    private static void setRemoteAdapterV11(Context context, @NonNull final RemoteViews views) {
+        views.setRemoteAdapter(0, R.id.widget_list,
+                new Intent(context, QuoteWidgetRemoteViewsService.class));
+    }
 
     void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                          int appWidgetId) {
@@ -67,8 +90,6 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
 
     }
 
-
-
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -77,7 +98,6 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
 
         if (intent.getAction().equals(SYNC_CLICKED)) {
 
-            //  Log.v(TAG, "Received");
             final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             final ComponentName componentName = new ComponentName(context, QuoteWidgetProvider.class);
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetManager.getAppWidgetIds(componentName), R.id.widget_list);
@@ -92,31 +112,6 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
-    }
-
-    /**
-     * Sets the remote adapter used to fill in the list items
-     *
-     * @param views RemoteViews to set the RemoteAdapter
-     */
-
-
-
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    private static void setRemoteAdapter(Context context, @NonNull final RemoteViews views) {
-        views.setRemoteAdapter(R.id.widget_list,
-                new Intent(context, QuoteWidgetRemoteViewsService.class));
-    }
-
-    /**
-     * Sets the remote adapter used to fill in the list items
-     *
-     * @param views RemoteViews to set the RemoteAdapter
-     */
-    @SuppressWarnings("deprecation")
-    private static void setRemoteAdapterV11(Context context, @NonNull final RemoteViews views) {
-        views.setRemoteAdapter(0, R.id.widget_list,
-                new Intent(context, QuoteWidgetRemoteViewsService.class));
     }
 
 }

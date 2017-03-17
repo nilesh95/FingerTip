@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".NewsDescription"
+    tools:context=".HomeFragment.NewsDescription"
     tools:showIn="@layout/activity_scrolling">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,24 +13,21 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp">
+
         <ImageView
 
             android:id="@+id/mtitle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
+            android:background="@android:color/black"
+            android:contentDescription="@string/posterImage"
             android:scaleType="centerCrop"
             app:layout_collapseMode="parallax"
             app:layout_scrollFlags="scroll|enterAlways"
-            android:background="@android:color/black"
-
-
 
 
             />
-
-
-
 
 
         <RelativeLayout
@@ -46,6 +43,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:adjustViewBounds="true"
+                android:contentDescription="@string/posterImage"
                 android:scaleType="centerCrop" />
 
             <TextView
@@ -71,17 +69,15 @@
                 android:paddingRight="16dp" />
 
 
-
-                    <TextView
-                        android:id="@+id/language_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/year"
-                        android:layout_toRightOf="@id/poster"
-                        android:paddingBottom="8dp"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp"  />
-
+            <TextView
+                android:id="@+id/language_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/year"
+                android:layout_toRightOf="@id/poster"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" />
 
 
         </RelativeLayout>
@@ -97,8 +93,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="DESCRIPTION"
-            android:textSize="20sp"/>
+            android:text="@string/description"
+            android:textSize="20sp" />
 
         <View
             android:layout_width="match_parent"
@@ -116,18 +112,18 @@
             android:padding="16dp" />
 
         <Button
+            android:id="@+id/knowMore"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="16dp"
             android:background="#20000000"
             android:padding="8dp"
-            android:id="@+id/knowMore"
-            android:text="More Info"/>
+            android:text="@string/more_info" />
 
-      <!--  <com.balysv.materialripple.MaterialRippleLayout
-            android:id="@+id/ripple"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"> -->
+        <!--  <com.balysv.materialripple.MaterialRippleLayout
+              android:id="@+id/ripple"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"> -->
 
 
     </LinearLayout>

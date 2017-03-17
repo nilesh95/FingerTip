@@ -15,7 +15,7 @@ public class Sources {
     public Sources() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
         username = "Guest";
-        sourceList = new ArrayList<String>();
+        sourceList = new ArrayList<>();
     }
 
     public Sources(String username, List<String> sourceList) {
@@ -23,13 +23,11 @@ public class Sources {
         this.sourceList = sourceList;
     }
 
-    public String getUserName()
-    {
+    public String getUserName() {
         return username;
     }
 
-    public List<String> getSourcesList()
-    {
+    public List<String> getSourcesList() {
         return sourceList;
     }
 }

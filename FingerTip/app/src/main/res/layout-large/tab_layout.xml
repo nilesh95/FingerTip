@@ -14,28 +14,26 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
 
-        <com.ogaclejapan.smarttablayout.SmartTabLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <com.ogaclejapan.smarttablayout.SmartTabLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/viewpagertab"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:background="@color/colorPrimary"
             android:clipToPadding="false"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
-            android:background="@color/colorPrimary"
             app:stl_defaultTabTextColor="#FFFFFF"
             app:stl_defaultTabTextHorizontalPadding="18dp"
             app:stl_dividerColor="#80FFFFFF"
             app:stl_dividerThickness="0dp"
             app:stl_indicatorColor="#48cfad"
             app:stl_indicatorCornerRadius="18dp"
-            app:stl_indicatorInterpolation="smart"
             app:stl_indicatorGravity="center"
+            app:stl_indicatorInterpolation="smart"
             app:stl_indicatorThickness="36dp"
             app:stl_underlineColor="#80FFFFFF"
-            app:stl_underlineThickness="0dp"
-            />
+            app:stl_underlineThickness="0dp" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -44,21 +42,20 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:baselineAligned="false"
-        android:orientation="horizontal"
-        >
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
-        android:layout_width="350dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
-        android:layout_below="@id/viewpagertab"
-        />
-    <FrameLayout
-        android:layout_marginLeft="10dp"
-        android:id="@+id/details_frag"
-        android:layout_width="0dp"
-        android:layout_weight="2"
-        android:layout_height="match_parent" >
-    </FrameLayout>
-        </LinearLayout>
+        android:orientation="horizontal">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="350dp"
+            android:layout_height="match_parent"
+            android:layout_below="@id/viewpagertab"
+            android:layout_weight="1" />
+
+        <FrameLayout
+            android:id="@+id/details_frag"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="2" />
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

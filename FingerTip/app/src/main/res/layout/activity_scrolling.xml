@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".NewsDescription">
+    tools:context=".HomeFragment.NewsDescription">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -22,30 +22,33 @@
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
-<FrameLayout
-    android:layout_width="match_parent"
-    android:fitsSystemWindows="true"
-    android:layout_height="match_parent"
-    android:minHeight="100dp">
-            <ImageView
-                android:alpha="0.6"
-                android:id="@+id/imgBack"
-                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:fitsSystemWindows="true"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax"
-                android:minHeight="100dp"/>
-</FrameLayout>
+                android:fitsSystemWindows="true"
+                android:minHeight="100dp">
+
+                <ImageView
+                    android:id="@+id/imgBack"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.6"
+                    android:contentDescription="@string/descriptionBackground"
+                    android:fitsSystemWindows="true"
+                    android:minHeight="100dp"
+                    android:scaleType="centerCrop"
+                    app:layout_collapseMode="parallax"
+                    app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed" />
+            </FrameLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
 
         </android.support.design.widget.CollapsingToolbarLayout>

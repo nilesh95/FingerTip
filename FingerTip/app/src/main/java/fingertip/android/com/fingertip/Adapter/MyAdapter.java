@@ -17,42 +17,17 @@ import fingertip.android.com.fingertip.R;
 
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+    public static Context context;
     private ArrayList<String> imagelist;
     private ArrayList<String> titlelist;
 
-    public static Context context;
 
-
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-
-
-        public ImageView mImageView;
-        public TextView mTextView;
-
-
-        public ViewHolder(View v) {
-            super(v);
-
-            mImageView= (ImageView) v.findViewById(R.id.imview);
-            mTextView = (TextView) v.findViewById(R.id.txtview);
-            context = v.getContext();
-
-        }
-        @Override
-        public void onClick(View view) {
-            Log.i("MyActivity", "onClick " + getAdapterPosition() + " ");
-        }
-    }
-
-
-    public MyAdapter(ArrayList<String> myDataset,ArrayList<String> titleList){
+    public MyAdapter(ArrayList<String> myDataset, ArrayList<String> titleList) {
         imagelist = myDataset;
         titlelist = titleList;
 
 
     }
-
 
     @Override
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
@@ -61,7 +36,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.gridlayout, parent, false);
 
-        ViewHolder vh = new ViewHolder((View) v);
+        ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
@@ -79,6 +54,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public int getItemCount() {
 
         return imagelist.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+
+        public ImageView mImageView;
+        public TextView mTextView;
+
+
+        public ViewHolder(View v) {
+            super(v);
+
+            mImageView = (ImageView) v.findViewById(R.id.imview);
+            mTextView = (TextView) v.findViewById(R.id.txtview);
+            context = v.getContext();
+
+        }
+
+        @Override
+        public void onClick(View view) {
+            Log.i(context.getString(R.string.mainActivity), context.getString(R.string.onClick) + getAdapterPosition() + " ");
+        }
     }
 
 }

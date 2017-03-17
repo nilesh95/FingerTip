@@ -5,19 +5,19 @@
         <item
             android:id="@+id/home"
             android:icon="@drawable/ic_genre"
-            android:title="Home" />
+            android:title="@string/home" />
         <item
             android:id="@+id/fav_topic"
             android:icon="@drawable/ic_favorites"
-            android:title="Favorite Topics" />
+            android:title="@string/favorite_topic" />
         <item
             android:id="@+id/trending_zone"
             android:icon="@drawable/ic_recents"
-            android:title="Trending Zone" />
+            android:title="@string/trending_zone" />
         <item
             android:id="@+id/logout"
             android:icon="@drawable/ic_menu_send"
-            android:title="Logout" />
+            android:title="@string/logout" />
     </group>
 
 </menu>

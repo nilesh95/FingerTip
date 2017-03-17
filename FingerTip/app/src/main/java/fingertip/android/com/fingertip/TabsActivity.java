@@ -16,16 +16,16 @@ import java.util.List;
 
 import fingertip.android.com.fingertip.HomeFragment.Latest;
 import fingertip.android.com.fingertip.HomeFragment.Popular;
-import fingertip.android.com.fingertip.HomeFragment.Tab_description;
-import fingertip.android.com.fingertip.HomeFragment.Top_rated;
+import fingertip.android.com.fingertip.HomeFragment.TabDescription;
+import fingertip.android.com.fingertip.HomeFragment.TopRated;
 
 
-public class TabsActivity extends AppCompatActivity implements Tab_description.RefreshGrid {
+public class TabsActivity extends AppCompatActivity implements TabDescription.RefreshGrid {
 
     SmartTabLayout viewPagerTab;
-    private ViewPager viewPager;
     FragmentManager fm;
     ViewPagerAdapter adapter;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +35,16 @@ public class TabsActivity extends AppCompatActivity implements Tab_description.R
         getSupportActionBar().setElevation(0);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.ic_menu_share);
-        fm=getSupportFragmentManager();
-        if(getResources().getBoolean(R.bool.dual_pane)){
+        fm = getSupportFragmentManager();
+        if (getResources().getBoolean(R.bool.dual_pane)) {
             tabletView();
         }
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
-         viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpagertab);
+        viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpagertab);
         viewPagerTab.setDistributeEvenly(true);
         viewPagerTab.setViewPager(viewPager);
-
 
 
     }
@@ -53,14 +52,13 @@ public class TabsActivity extends AppCompatActivity implements Tab_description.R
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new Popular(), "POPULAR");
-        adapter.addFragment(new Top_rated(), "TOP RATED");
+        adapter.addFragment(new TopRated(), "TOP RATED");
         adapter.addFragment(new Latest(), "LATEST");
 
         viewPager.setAdapter(adapter);
     }
 
-    public void tabletView()
-    {
+    public void tabletView() {
         FragmentTransaction ft = fm.beginTransaction();
         ft.add(R.id.details_frag, new FragmentNone());
         ft.commit();
@@ -70,8 +68,9 @@ public class TabsActivity extends AppCompatActivity implements Tab_description.R
     public void refreshFavGrid() {
         adapter.notifyDataSetChanged();
     }
+
     public interface UpdateableFragment {
-        public void update();
+        void update();
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
